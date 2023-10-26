@@ -9,20 +9,35 @@ const vscode = require('vscode');
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
-
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "goodfellas-uitoolkit" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with  registerCommand
-	// The commandId parameter must match the command field in package.json
+	
 	let disposable = vscode.commands.registerCommand('goodfellas-uitoolkit.helloWorld', function () {
-		// The code you place here will be executed every time your command is executed
-
-		// Display a message box to the user
+		const panel = vscode.window.createWebviewPanel(
+			'goodfellas-uitoolkit',
+			'Hello World',
+			vscode.ViewColumn.Beside,
+			{
+				enableScripts: true, // Enable JavaScript in the webview
+			}
+		);
+	
+		const htmlContent = `
+		<!DOCTYPE html>
+		<html>
+		<head>
+			<title>Hello World</title>
+		</head>
+		<body>
+			<h1>Hello World!</h1>
+		</body>
+		</html>`;
+	
+		panel.webview.html = htmlContent;
+		panel.reveal();
 		vscode.window.showInformationMessage('Hello World from UIToolkit!');
 	});
+
+	
 
 	context.subscriptions.push(disposable);
 }
