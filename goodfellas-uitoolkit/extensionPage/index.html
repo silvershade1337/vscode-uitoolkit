@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>UIToolkit</title>
+</head>
+<body>
+    <h1>Welcome to UIToolkit by Team Goodfellas</h1>
+    <button id="myButton">Copy to Clipboard</button>
+    <script>
+        const vscode = acquireVsCodeApi();
+        const button = document.getElementById('myButton');
+        button.addEventListener('click', () => {
+            // Send a message to the extension when the button is clicked
+            vscode.postMessage({ command: 'copyButtonClicked' });
+        });
+    </script>
+</body>
+</html>

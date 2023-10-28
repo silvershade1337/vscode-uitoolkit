@@ -12,10 +12,16 @@
   "activationEvents": [],
   "main": "./extension.js",
   "contributes": {
-    "commands": [{
-      "command": "goodfellas-uitoolkit.helloWorld",
-      "title": "Hello World"
-    }]
+    "commands": [
+      {
+        "command": "goodfellas-uitoolkit.helloWorld",
+        "title": "Hello World"
+      },
+      {
+        "command": "goodfellas-uitoolkit.openuitoolkit",
+        "title": "UIToolkit: Open UI Toolkit"
+      }
+    ]
   },
   "scripts": {
     "lint": "eslint .",
