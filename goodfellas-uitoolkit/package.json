@@ -24,6 +24,10 @@
       {
         "command": "goodfellas-uitoolkit.iconSearch",
         "title": "UIToolkit: Search for Material icon"
+      },
+      {
+        "command": "goodfellas-uitoolkit.behanceSearch",
+        "title": "UIToolkit: Search for designs on Behance"
       }
     ]
   },

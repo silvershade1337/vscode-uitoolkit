@@ -64,6 +64,14 @@ function activate(context) {
 		})
 		
 	})
+	vscode.commands.registerCommand('goodfellas-uitoolkit.behanceSearch', function () {
+		vscode.window.showInputBox({
+			prompt: 'What do you want to search on behance:',
+			placeHolder: 'Type your query (eg. ui designs)',
+		}).then((query) => {
+			vscode.env.openExternal(vscode.Uri.parse(`https://www.behance.net/?tracking_source=typeahead_search_direct&search=${query}`));
+		})
+	})
 
 	
 
