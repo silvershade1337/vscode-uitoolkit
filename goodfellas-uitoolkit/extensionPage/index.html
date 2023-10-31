@@ -25,7 +25,7 @@
         }
         .color-palette-container {
             /* Add a single border around the color boxes and "Click to Copy" message */
-            border: 1px solid black;
+            border: 1px solid white;
             text-align: center;
         }
 
@@ -41,21 +41,90 @@
             border-radius: 5px;
             cursor: pointer; /* Add cursor pointer to indicate clickability */
         }
+        :root {
+            --arrow-bg: rgba(255, 255, 255, 0.3);
+            --arrow-icon: url(https://upload.wikimedia.org/wikipedia/commons/9/9d/Caret_down_font_awesome_whitevariation.svg);
+            --option-bg: rgba(255, 255, 255, 0.2);
+            --option-fg: white;
+            --select-bg: rgba(255, 255, 255, 0.2);
+            --main-button-bg: rgba(0, 163, 196, 0.3);
+        }
+
+        button {
+            appearance: none;
+            border: 0;
+            outline: 0;
+            width: 10rem;
+            padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+            margin: 1rem;
+            background: var(--main-button-bg);
+            color: white;
+            border-radius: 0.25em;
+            box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+
+        #randomButton {
+            background: var(--select-bg);
+            width: min-content;
+        }
+
+        #title {
+            font-size: 50;
+        }
+        input {
+            border: 0;
+            outline: 0;
+        }
+        select {
+            /* Reset */
+            appearance: none;
+            border: 0;
+            outline: 0;
+            font: inherit;
+            /* Personalize */
+            width: 10rem;
+            padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+            background: var(--arrow-icon) no-repeat right 0.8em center / 1.4em,
+                linear-gradient(to left, var(--arrow-bg) 3em, var(--select-bg) 3em);
+            color: white;
+            border-radius: 0.25em;
+            box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            /* Remove IE arrow */
+            &::-ms-expand {
+                display: none;
+            }
+            /* Remove focus outline */
+            &:focus {
+                outline: none;
+            }
+            /* <option> colors */
+            
+        }
+        option {
+            color: black;
+            background-color: white;
+        }
+
     </style>
 </head>
 <body>
     <div class="input-container">
+        <h1>Color Palette Gen</h1>
         <label for="seed-color">Enter Seed Color:</label>
-        <input type="color" id="seed-color">
+        <input type="color" id="seed-color"> <button onclick="randomColor()" id="randomButton">Random</button>
         <br>
         <button onclick="generatePalette()">Generate Palette</button>
         <br>
-        <label for="copyas">Copy As:</label>
-        <select name="copyas" id="copyas">
-            <option value="hex">HEX</option>
-            <option value="rgb">RGB</option>
-            <option value="flutter">Flutter Color</option>
-        </select>
+        <div class="copy-as" id="copy-as" style="display: none;">
+            <label for="copyas" id="copyaslabel">Copy As:</label>
+            <select name="copyas" id="copyas">
+                <option value="hex">HEX</option>
+                <option value="rgb">RGB</option>
+                <option value="flutter">Flutter Color</option>
+            </select>
+        </div>
         
     </div>
     <div class="color-palette-container">
@@ -65,6 +134,17 @@
     <script>
         const vscode = acquireVsCodeApi();
         const button = document.getElementById('myButton');
+        function randomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+
+            document.getElementById('seed-color').value = color;
+        }
+
         function generatePalette() {
             const seedColor = document.getElementById('seed-color').value;
             const colorPalette = document.getElementById('color-palette');
@@ -74,12 +154,12 @@
             // Make an API request to generate color palette based on the seedColor
             // Replace the API URL with your actual API endpoint
             console.log(seedColor);
-            fetch(`https://www.thecolorapi.com/scheme?hex=${seedColorHex}&mode=monochrome&count=6`)
+            fetch(`https://www.thecolorapi.com/scheme?hex=${seedColorHex}&mode=monochrome&count=8`)
                 .then(response => response.json())
                 .then(data => {
                     console.log(data['colors']);
                     // Display the generated colors in the color palette
-                    data.colors.slice(0, 6).forEach(color => {
+                    data.colors.slice(0, 8).forEach(color => {
                         console.log(color);
                         const colorBox = document.createElement('div');
                         colorBox.className = 'color-box';
@@ -94,6 +174,7 @@
                     });
                     const copyText = document.getElementById('copy-text');
                     copyText.style.display = 'block';
+                    document.getElementById('copy-as').style.display = 'block';
                 })
                 .catch(error => {
                     console.error('Error fetching color data:', error);

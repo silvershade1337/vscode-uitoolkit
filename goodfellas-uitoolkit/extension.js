@@ -37,6 +37,9 @@ function activate(context) {
 			vscode.ViewColumn.Beside,
 			{
 				enableScripts: true, // Enable JavaScript in the webview
+				webviewOptions: {
+					width: 400, // Specify the width in pixels
+				},
 			}
 		);
 	
