@@ -11,12 +11,6 @@ const path = require('path');
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
-	function getWebViewContent() {
-		const htmlPath = path.join(context.extensionPath, 'extensionPage', 'index.html'); // Assuming the HTML file is in the root of your extension directory
-		const htmlContent = fs.readFileSync(htmlPath, 'utf8');
-		return htmlContent;
-	}
-	
 	console.log('Congratulations, your extension "goodfellas-uitoolkit" is now active!');
 	vscode.commands.registerCommand('goodfellas-uitoolkit.helloWorld', function () {
 		vscode.window.showInformationMessage('Hello World from UIToolkit!');
@@ -31,7 +25,8 @@ function activate(context) {
 			}
 		);
 	
-		const htmlContent = getWebViewContent();
+		const htmlPath = path.join(context.extensionPath, 'extensionPage', 'index.html'); // Assuming the HTML file is in the root of your extension directory
+		const htmlContent = fs.readFileSync(htmlPath, 'utf8');
 	
 		panel.webview.html = htmlContent;
 		panel.webview.onDidReceiveMessage(message => {
@@ -45,6 +40,16 @@ function activate(context) {
 		});
 		panel.reveal();
 	});
+
+	vscode.commands.registerCommand('goodfellas-uitoolkit.iconSearch', function () {
+		vscode.window.showInputBox({
+			prompt: 'What Material icon are you looking for:',
+			placeHolder: 'Type your query (eg. plus, people)',
+		}).then((query) => {
+			vscode.env.openExternal(vscode.Uri.parse(`https://fonts.google.com/icons?selected=Material+Icons+Outlined:add:&icon.query=${query}&icon.platform=flutter&icon.set=Material+Icons`));
+		})
+		
+	})
 
 	
 

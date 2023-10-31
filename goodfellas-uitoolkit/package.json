@@ -20,6 +20,10 @@
       {
         "command": "goodfellas-uitoolkit.openuitoolkit",
         "title": "UIToolkit: Open UI Toolkit"
+      },
+      {
+        "command": "goodfellas-uitoolkit.iconSearch",
+        "title": "UIToolkit: Search for Material icon"
       }
     ]
   },
