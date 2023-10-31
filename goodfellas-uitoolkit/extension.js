@@ -11,6 +11,21 @@ const path = require('path');
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
+	const showMessageWithTimeout = (message, timeout = 3000) => {
+		void window.withProgress(
+			{
+				location: ProgressLocation.Notification,
+				title: message,
+				cancellable: false,
+			},
+	
+			async (progress) => {
+				await waitFor(timeout, () => { return false; });
+				progress.report({ increment: 100 });
+			},
+		);
+	};
+
 	console.log('Congratulations, your extension "goodfellas-uitoolkit" is now active!');
 	vscode.commands.registerCommand('goodfellas-uitoolkit.helloWorld', function () {
 		vscode.window.showInformationMessage('Hello World from UIToolkit!');
@@ -30,12 +45,8 @@ function activate(context) {
 	
 		panel.webview.html = htmlContent;
 		panel.webview.onDidReceiveMessage(message => {
-			if (message.command === 'copyButtonClicked') {
-				// Call your function here
-				// vscode.window.showInformationMessage('Copy button clicked');
-				vscode.env.clipboard.writeText("Text copied to clipboard successfully").then(() => {
-					vscode.window.showInformationMessage('Text copied to clipboard!');
-				});
+			if (message.command === 'showAlert') {
+				vscode.window.showInformationMessage(message.text);
 			}
 		});
 		panel.reveal();

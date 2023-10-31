@@ -1,21 +1,3 @@
-<!-- <!DOCTYPE html>
-<html>
-<head>
-    <title>UIToolkit</title>
-</head>
-<body>
-    <h1>Welcome to UIToolkit by Team Goodfellas</h1>
-    <button id="myButton">Copy to Clipboard</button>
-    <script>
-        const vscode = acquireVsCodeApi();
-        const button = document.getElementById('myButton');
-        button.addEventListener('click', () => {
-            // Send a message to the extension when the button is clicked
-            vscode.postMessage({ command: 'copyButtonClicked' });
-        });
-    </script>
-</body>
-</html> -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,6 +22,11 @@
         .color-palette {
             display: flex;
             flex-wrap: wrap;
+        }
+        .color-palette-container {
+            /* Add a single border around the color boxes and "Click to Copy" message */
+            border: 1px solid black;
+            text-align: center;
         }
 
         .color-box {
@@ -69,13 +56,15 @@
             <option value="rgb">RGB</option>
             <option value="flutter">Flutter Color</option>
         </select>
-        <br>
-        <p id="copy-text" style="display: none; font-weight: bold;">Click a color to copy</p>
+        
     </div>
-
-    <div class="color-palette" id="color-palette"></div>
-    
+    <div class="color-palette-container">
+        <p id="copy-text" style="display: none; font-weight: bold;">Click a color to copy</p>
+        <div class="color-palette" id="color-palette"></div>
+    </div>
     <script>
+        const vscode = acquireVsCodeApi();
+        const button = document.getElementById('myButton');
         function generatePalette() {
             const seedColor = document.getElementById('seed-color').value;
             const colorPalette = document.getElementById('color-palette');
@@ -134,6 +123,7 @@
             document.execCommand('copy');
             document.body.removeChild(el);
             alert(`Copied: ${copyColor}`);
+            vscode.postMessage({command: "showAlert", text: `Copied: ${copyColor}`})
         }
     </script>
 </body>
