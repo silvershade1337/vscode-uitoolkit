@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
     <title>UIToolkit</title>
@@ -13,6 +13,128 @@
             // Send a message to the extension when the button is clicked
             vscode.postMessage({ command: 'copyButtonClicked' });
         });
+    </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Palette Generator</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .input-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .color-palette {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .color-box {
+            width: 150px;
+            height: 150px;
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #333;
+            border-radius: 5px;
+            cursor: pointer; /* Add cursor pointer to indicate clickability */
+        }
+    </style>
+</head>
+<body>
+    <div class="input-container">
+        <label for="seed-color">Enter Seed Color:</label>
+        <input type="color" id="seed-color">
+        <br>
+        <button onclick="generatePalette()">Generate Palette</button>
+        <br>
+        <label for="copyas">Copy As:</label>
+        <select name="copyas" id="copyas">
+            <option value="hex">HEX</option>
+            <option value="rgb">RGB</option>
+            <option value="flutter">Flutter Color</option>
+        </select>
+        <br>
+        <p id="copy-text" style="display: none; font-weight: bold;">Click a color to copy</p>
+    </div>
+
+    <div class="color-palette" id="color-palette"></div>
+    
+    <script>
+        function generatePalette() {
+            const seedColor = document.getElementById('seed-color').value;
+            const colorPalette = document.getElementById('color-palette');
+            const seedColorHex = seedColor.slice(1);
+            colorPalette.innerHTML = '';
+
+            // Make an API request to generate color palette based on the seedColor
+            // Replace the API URL with your actual API endpoint
+            console.log(seedColor);
+            fetch(`https://www.thecolorapi.com/scheme?hex=${seedColorHex}&mode=monochrome&count=6`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data['colors']);
+                    // Display the generated colors in the color palette
+                    data.colors.slice(0, 6).forEach(color => {
+                        console.log(color);
+                        const colorBox = document.createElement('div');
+                        colorBox.className = 'color-box';
+                        console.log(color.hex.value);
+                        colorBox.style.backgroundColor = color.hex.value;
+                        colorPalette.appendChild(colorBox);
+
+                        // Attach a click event to the color box
+                        colorBox.addEventListener('click', function() {
+                            copyToClipboard(color);
+                        });
+                    });
+                    const copyText = document.getElementById('copy-text');
+                    copyText.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error fetching color data:', error);
+                });
+        }
+
+        function copyToClipboard(color) {
+            const el = document.createElement('textarea');
+            const copyas = document.getElementById('copyas').value;
+            let copyColor = '';
+
+            switch (copyas) {
+                case "hex":
+                    copyColor = color.hex.value;
+                    break;
+                case "rgb":
+                    copyColor = color.rgb.value;
+                    break;
+                case "flutter":
+                    copyColor = `Color(0x${color.hex.clean})`;
+                    break;
+            }
+
+            el.value = copyColor;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            alert(`Copied: ${copyColor}`);
+        }
     </script>
 </body>
 </html>
